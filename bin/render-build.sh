@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-# Exit immediately on error
 set -o errexit
 
 echo "==> bundle install"
