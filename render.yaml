@@ -2,40 +2,30 @@ services:
   - type: web
     name: canvas-lms
     runtime: ruby
-    plan: starter          # "starter" is safer for Canvas; you *can* try "free" first
-    region: oregon         # or your preferred region
+    plan: starter
+    region: oregon
 
     buildCommand: "./bin/render-build.sh"
-    # If you later move to a paid plan you can move db:migrate here:
-    # preDeployCommand: "bundle exec rails db:migrate"
-
     startCommand: "bundle exec rails server -b 0.0.0.0 -p 3000"
 
     envVars:
-      # Rails environment
       - key: RAILS_ENV
         value: "production"
 
-      # Rails master key (from config/master.key on your machine – don't commit that file)
       - key: RAILS_MASTER_KEY
         sync: false
 
-      # DB connection comes from the managed Render Postgres DB below
       - key: DATABASE_URL
         fromDatabase:
           name: canvas-db
           property: connectionString
 
-      # Keep concurrency small to avoid OOM
       - key: WEB_CONCURRENCY
         value: "2"
 
-      # Optional: threads tuning; Canvas uses Puma by default
       - key: RAILS_MAX_THREADS
         value: "5"
 
-      # Domain Canvas uses internally (for links, etc.)
-      # You can change this later to a custom domain.
       - key: CANVAS_DOMAIN
         value: "canvas-lms.onrender.com"
 
